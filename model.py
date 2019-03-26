@@ -92,8 +92,7 @@ class Window(QtGui.QMainWindow):
 
     def file_open(self):
         name = QtGui.QFileDialog.getOpenFileName(self,
-                                                    'CSV File',
-                                                   '/home/ratna/Documents/GUI_p/csvfiles','*.csv')
+                                                    'Open File','*.csv')
         file=pd.read_csv(name)
         #self.tableView.setModel(file)
         print(file)
@@ -108,8 +107,7 @@ class Window(QtGui.QMainWindow):
 
     def plot(self):
         name = QtGui.QFileDialog.getOpenFileName(self,
-                                                    'CSV File',
-                                                   '/home/ratna/Documents/GUI_p/csvfiles','*.csv')
+                                                    'Open File','*.csv')
         file=pd.read_csv(name)
         
         print(file)
