@@ -117,18 +117,10 @@ class PrettyWidget(QtGui.QWidget):
         plt.cla()
         ax = self.figure.add_subplot(111)
         ax.plot(y, 'r.-')
-        ax.set_title('Table Plot')
+        ax.set_title('Line Plot')
         self.canvas.draw()
 
     def plotsmooth(self):
-
-
-        x = []
-        for n in range(9):
-            try:
-                x.append(float(self.table.item(n, 1).text()))
-            except:
-                x.append(np.nan)
 
         y = []
         for n in range(9):
@@ -157,9 +149,13 @@ class PrettyWidget(QtGui.QWidget):
         # #print(y_smooth)
 
 
+        y = np.linspace(max(y),min(y),500) 
+        s = y**2
+
         ax = self.figure.add_subplot(111)
-        ax.plot (x,y)
-        ax.set_title('Table Plot')
+        plt.plot (y, s)
+        
+        ax.set_title('Smooth Line Plot')
         self.canvas.draw()
 
 
@@ -182,7 +178,7 @@ class PrettyWidget(QtGui.QWidget):
         plt.cla()
         ax = self.figure.add_subplot(111)
         ax.plot(x, y,'o',c='purple')
-        ax.set_title('Table Plot')
+        ax.set_title('Point Plot')
         self.canvas.draw()
     
     
