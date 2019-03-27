@@ -10,6 +10,12 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 
+from csv_try import *
+from load import *
+
+
+
+
 class Window(QtGui.QMainWindow):
 
     def __init__(self):
@@ -28,7 +34,7 @@ class Window(QtGui.QMainWindow):
         openFile = QtGui.QAction("&Load", self)
         openFile.setShortcut("Ctrl+O")
         openFile.setStatusTip('Open File')
-        openFile.triggered.connect(self.file_open)
+        openFile.triggered.connect(self.csvfile_open)
             
 
         openEditor = QtGui.QAction("&Editor", self)
@@ -74,20 +80,45 @@ class Window(QtGui.QMainWindow):
         exit = mainMenu.addMenu('&Exit')
         exit.addAction(d)
 
+        # l1 = QLable(self)
+        # l2 = QLable()
+
+
+        # l1.setText("Welcome to fsf_2019_screening task2")
+
+        # l1.setAlignment(Qt.AlignCenter)
+        # l2.setPixmap(QPixmap("pic.png"))
+
         self.home()
 
         self.show()
 
     def home(self):
 
-        btn = QtGui.QPushButton("Quit", self)
-        btn.clicked.connect(self.close_application)
+        btn = QtGui.QPushButton("Load", self)
+        btn.clicked.connect(self.window2)
         btn.resize(btn.minimumSizeHint())
         btn.move(100,100)
+
+
 
         self.toolBar = self.addToolBar("C")
     
 
+    def window2(self):
+        w = PrettyWidget()
+        w.show()
+
+
+    def csvfile_open(self):
+         filePath = QtGui.QFileDialog.getOpenFileName(self,
+                                                    'Open File','*.csv')
+         view = QtGui.QTableView()
+
+
+         model = PandasModel(filePath)
+         view.setModel(model)
+         
 
 
     def file_open(self):
