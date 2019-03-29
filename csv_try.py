@@ -1,6 +1,9 @@
 from PyQt4 import QtGui
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
 import os, sys
 import csv
+import pandas as pd
 import numpy as np
 from scipy.interpolate import spline
 from scipy.optimize import curve_fit
@@ -60,6 +63,7 @@ class PrettyWidget(QtGui.QWidget):
         btn3.clicked.connect(self.plotline)
         grid.addWidget(btn3, 0,2)
 
+        #plot Smooth
         btn4 = QtGui.QPushButton('Plot Smooth', self)
         btn4.resize(btn4.sizeHint())    
         btn4.clicked.connect(self.plotsmooth)
@@ -69,49 +73,60 @@ class PrettyWidget(QtGui.QWidget):
     
     
     def getCSV(self):
-        filePath = QtGui.QFileDialog.getOpenFileName(self, 
-                                                       'Open File','*.csv')
+        filePath = QtGui.QFileDialog.getOpenFileName(self, 'Open File','*.csv')
         fileHandle = open(filePath, 'r')
-        line = fileHandle.readline()[:-1].split(',')
-        for n, val in enumerate(line):
-            newitem = QtGui.QTableWidgetItem(val)
-            self.table.setItem(0, n, newitem)
-        self.table.resizeColumnsToContents()
-        self.table.resizeRowsToContents()    
-    
-       
-
-
-        # reader = csv.reader(fileHandle,delimiter = ",")
-        # data = list(reader)
-        # row_count = len(data)
-
-        # i = 0
-        
-        # # for i in range(row_count):
-        # #     print(i)
-        # #     line = fileHandle.readline()[:-1].split(',')
-        # #     print(line)
-        # #     for n, val in enumerate(line):
-        # #         newitem = QtGui.QTableWidgetItem(val)
-        # #         print(val)
-        # #         self.table.setItem(i, n, newitem)
-        # #     i=+1
-        
         # line = fileHandle.readline()[:-1].split(',')
         # for n, val in enumerate(line):
         #     newitem = QtGui.QTableWidgetItem(val)
         #     self.table.setItem(0, n, newitem)
-        
         # self.table.resizeColumnsToContents()
         # self.table.resizeRowsToContents()    
+        df = pd.read_csv(filePath)
+       
+
+
+        #reader = csv.reader(fileHandle,delimiter = ",")
+        #data = list(reader)
+        #print(data)
+        row_count = df.shape[0]
+
+        #i = 0
+
+        line1 = fileHandle.readline()[:-1].split(',')
+        for n, val in enumerate(line1):
+            newitem = QtGui.QTableWidgetItem(val)
+            self.table.setItem(0, n, newitem)
+        
+        
+        for i in range(1,row_count):
+            #print(i)
+            #line = fileHandle.readline()[:-1].split(',')
+        #print(df)
+        #print(line)
+
+
+            line = df.values[i]
+            for n, val in enumerate(line):
+                newitem = QtGui.QTableWidgetItem(val)
+                print(val)
+                self.table.setItem(i, n, newitem)
+            i=+1
+        
+        
+        self.table.resizeColumnsToContents()
+        self.table.resizeRowsToContents()    
     
     
     def plotline(self):
+        
+        col1, ok = QtGui.QInputDialog.getInt(self, 'Text Input Dialog', 'Enter numbers of column 1:')
+    
+        col2, oku = QtGui.QInputDialog.getInt(self, 'Text Input Dialog', 'Enter the column 2:')
+            
         y = []
-        for n in range(9):
+        for n in range(10):
             try:
-                y.append(float(self.table.item(n, 0).text()))
+                y.append(float(self.table.item(n, col1).text()))
             except:
                 y.append(np.nan)
         plt.cla()
@@ -120,51 +135,62 @@ class PrettyWidget(QtGui.QWidget):
         ax.set_title('Line Plot')
         self.canvas.draw()
 
-    def plotsmooth(self):
-
-        y = []
-        for n in range(9):
+        x = []
+        for n in range(10):
             try:
-                y.append(float(self.table.item(n, 0).text()))
+                x.append(float(self.table.item(n, col2).text()))
             except:
-                y.append(np.nan)
+                x.append(np.nan)
         plt.cla()
-
-        # X = (x - np.mean(x, axis=0)) / np.std(y, axis=0)
-        # #y = (y - np.mean(y, axis=0)) / np.std(y, axis=0)
-        # ica = FastICA(whiten=False)
-        # ica.fit(X) 
-        # #ica.fit(y) 
-
-        # np.warnings.filterwarnings('ignore')
-        # m = np.array(sorted(x))
-        # n = np.array(sorted(y))
-        # x_new = np.linspace(min(m), max(m),500)
-        # y_new = np.linspace(min(n), max(n),500)
-        # #print(x_new)
-
-        # f = interp1d(x_new,y_new)
-        # f2 = interp1d(x_new, y_new, kind='quadratic')
-        # y_smooth=f(m,n,x_new)
-        # #print(y_smooth)
-
-
-        y = np.linspace(max(y),min(y),500) 
-        s = y**2
-
         ax = self.figure.add_subplot(111)
-        plt.plot (y, s)
-        
-        ax.set_title('Smooth Line Plot')
+        ax.plot(x,y, 'r.-')
+        ax.set_title('Line Plot')
         self.canvas.draw()
+        
+
+    def plotsmooth(self):
+            col1, ok = QtGui.QInputDialog.getInt(self, 'Text Input Dialog', 'Enter numbers of column 1:')
+    
+            col2, oku = QtGui.QInputDialog.getInt(self, 'Text Input Dialog', 'Enter the column 2:')
+         
+            y = []
+            for n in range(10):
+                try:
+                    y.append(float(self.table.item(n, col1).text()))
+                except:
+                    y.append(np.nan)
+            
+
+            y = np.linspace(max(y),min(y),500) 
+
+            x = []
+            for n in range(10):
+                try:
+                    x.append(float(self.table.item(n, col2).text()))
+                except:
+                    y.append(np.nan)
+            plt.cla()
+
+            x = np.linspace(max(x),min(x),500) 
+
+            #s = np.cos(y)
+
+            ax = self.figure.add_subplot(111)
+            plt.plot (x,y)
+        
+            ax.set_title('Smooth Line Plot')
+            self.canvas.draw()
 
 
     def plotscatter(self):
-        
+        col1, ok = QtGui.QInputDialog.getInt(self, 'Text Input Dialog', 'Enter numbers of column 1:')
+    
+        col2, oku = QtGui.QInputDialog.getInt(self, 'Text Input Dialog', 'Enter the column 2:')
+         
         x = []
         for n in range(9):
             try:
-                x.append(float(self.table.item(n, 1).text()))
+                x.append(float(self.table.item(n, col1).text()))
             except:
                 x.append(np.nan)
         
@@ -172,7 +198,7 @@ class PrettyWidget(QtGui.QWidget):
         y = []
         for n in range(9):
             try:
-                y.append(float(self.table.item(n, 0).text()))
+                y.append(float(self.table.item(n, col2).text()))
             except:
                 y.append(np.nan)
         plt.cla()
