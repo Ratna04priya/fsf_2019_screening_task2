@@ -34,18 +34,23 @@ class Window(QtGui.QMainWindow):
         openFile = QtGui.QAction("&Load", self)
         openFile.setShortcut("Ctrl+O")
         openFile.setStatusTip('Open File')
-        openFile.triggered.connect(self.csvfile_open)
+        openFile.triggered.connect(self.window2)
             
 
         openEditor = QtGui.QAction("&Editor", self)
         openEditor.setShortcut("Ctrl+E")
         openEditor.setStatusTip('Open Source')
-        openEditor.triggered.connect(self.editor)
+        openEditor.triggered.connect(self.window2)
 
         saveFile = QtGui.QAction("&Save File", self)
         saveFile.setShortcut("Ctrl+S")
         saveFile.setStatusTip('Save File')
         saveFile.triggered.connect(self.file_save)
+
+        addFile = QtGui.QAction("&Add data", self)
+        addFile.setShortcut("Ctrl+A")
+        addFile.setStatusTip('Add Data to File')
+        addFile.triggered.connect(self.file_open)
 
 
         d =  QtGui.QAction("&Exit",self)
@@ -53,10 +58,10 @@ class Window(QtGui.QMainWindow):
         d.setStatusTip('Wanna leave the App')
         d.triggered.connect(self.close_application)
 
-        p =  QtGui.QAction("&Plot", self)
-        p.setShortcut("Ctrl+P")
-        p.setStatusTip('Plot')
-        p.triggered.connect(self.plot)
+        # p =  QtGui.QAction("&Plot", self)
+        # p.setShortcut("Ctrl+P")
+        # p.setStatusTip('Plot')
+        # p.triggered.connect(self.plot)
 
         
 
@@ -68,14 +73,15 @@ class Window(QtGui.QMainWindow):
         fileMenu = mainMenu.addMenu('&File')
         fileMenu.addAction(a)
         fileMenu.addAction(openFile)
+        fileMenu.addAction(addFile)
         fileMenu.addAction(saveFile)
 
 
         viewMenu = mainMenu.addMenu('&Edit')
         viewMenu.addAction(openEditor)
 
-        plotmenu= mainMenu.addMenu('&Plot')
-        plotmenu.addAction(p)
+        # plotmenu= mainMenu.addMenu('&Plot')
+        # plotmenu.addAction(p)
 
         exit = mainMenu.addMenu('&Exit')
         exit.addAction(d)
